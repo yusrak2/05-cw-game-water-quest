@@ -1,0 +1,190 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Proxima Nova', 'Helvetica Neue', Arial, sans-serif;
+  margin: 0;
+  padding: 30px;
+  background-color: #FFFFFF;
+  color: #333;
+}
+
+.container {
+  max-width: 750px;
+  margin: 50px auto;
+  background-color: #FFFFFF;
+  padding: 40px;
+  border-radius: 20px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+  border: 2px solid #FFC907;
+}
+
+h1 {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 30px;
+  font-weight: bold;
+  margin-bottom: 30px;
+  color: #333;
+}
+
+h1 img {
+  height: 50px;
+  margin-right: 15px;
+  display: block;
+}
+
+.progress-container {
+  width: 100%;
+  height: 22px;
+  background-color: #E8E8E8;
+  border-radius: 11px;
+  margin: 40px 0;
+  position: relative;
+  overflow: visible; /* Allow overflow to be visible */
+}
+
+.progress-bar {
+  height: 100%;
+  background-color: #2E9DF7;
+  border-radius: 11px;
+  width: 0;
+  transition: width 0.5s ease-in-out;
+}
+
+.milestone {
+  position: absolute;
+  width: 36px; /* Increased size */
+  height: 36px; /* Increased size */
+  background: #FFFFFF;
+  border: 3px solid #2E9DF7;
+  border-radius: 50%;
+  top: 50%; /* Center vertically */
+  transform: translate(-50%, -50%); /* Center horizontally and vertically */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: bold;
+  color: #555;
+  transition: background-color 0.3s, border-color 0.3s;
+}
+
+.milestone.achieved {
+  background-color: #FFC907;
+  border-color: #2E9DF7;
+}
+
+.achievement {
+  background-color: #FFC907;
+  color: #333;
+  padding: 15px;
+  border-radius: 12px;
+  margin: 25px 0;
+  text-align: center;
+  font-weight: bold;
+  display: none;
+  animation: fadeIn 0.5s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.level-indicator {
+  font-size: 1.2em;
+  font-weight: bold;
+  color: #222;
+  text-align: center;
+  margin-bottom: 25px;
+}
+
+.stats {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 30px;
+  background-color: #F5F5F5;
+  padding: 15px;
+  border-radius: 12px;
+}
+
+.stats p {
+  margin: 0;
+  font-weight: bold;
+  color: #555;
+}
+
+.game-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+  margin: 0 auto;
+  max-width: 550px;
+}
+
+.grid-cell {
+  background-color: #EFEFEF;
+  border-radius: 14px;
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+}
+
+.grid-cell:hover {
+  background-color: #E0E0E0;
+  box-shadow: 0 6px 12px rgba(0,0,0,0.08);
+}
+
+.water-can {
+  width: 60px;
+  height: 60px;
+  background-image: url('img/water-can.png');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  cursor: pointer;
+  border-radius: 50%;
+  transition: transform 0.3s ease;
+}
+
+.water-can:hover {
+  transform: scale(1.25);
+}
+
+button {
+  background-color: #FFC907;
+  color: #5e4b0a;
+  border: none;
+  padding: 16px 30px;
+  font-size: 17px;
+  font-weight: bold;
+  border-radius: 10px;
+  cursor: pointer;
+  display: block;
+  margin: 35px auto 0;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+button:hover:not(:disabled) {
+  background-color: #E0B806;
+  transform: translateY(-2px);
+}
+
+button:disabled {
+  background-color: #CCCCCC;
+  cursor: not-allowed;
+  transform: none;
+}
