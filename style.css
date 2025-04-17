@@ -101,8 +101,9 @@ h1 img {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 60px;
-  height: 60px;
+  width: 70px;
+  height: 70px;
+  /* Ensure the wrapper is properly centered */
 }
 
 .water-can {
@@ -114,24 +115,19 @@ h1 img {
   background-position: center;
   cursor: pointer;
   border-radius: 50%;
-  animation: popUp 0.5s cubic-bezier(0.17, 0.67, 0.34, 1.54);
+  animation: popUp 0.5s cubic-bezier(0.17, 0.67, 0.34, 2);
+  transform-origin: center; /* Ensure scaling happens from the center */
 }
 
 @keyframes popUp {
   0% {
-    transform: translateY(100%) scale(0.5);
-  }
-  50% {
-    transform: translateY(-20%) scale(1.1);
+    transform: scale(0.5); /* Start scaling from the center */
   }
   100% {
-    transform: translateY(0) scale(1);
+    transform: scale(1); /* End scaling at full size */
   }
 }
 
-.water-can:hover {
-  transform: scale(1.1);
-}
 
 button {
   background-color: #4CAF50;
