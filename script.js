@@ -2,7 +2,7 @@
 const GOAL_CANS = 25;        // Total items needed to collect
 let currentCans = 0;         // Current number of items collected
 let gameActive = false;      // Tracks if game is currently running
-let spawnTimer;             // Holds the timer for spawning items
+let spawnInterval;          // Holds the interval for spawning items
 
 // Creates the 3x3 game grid where items will appear
 function createGrid() {
@@ -29,27 +29,18 @@ function spawnWaterCan() {
   }
 
   const randomCell = cells[Math.floor(Math.random() * cells.length)];
-  
-  // Create wrapper for proper positioning
-  const wrapper = document.createElement('div');
-  wrapper.className = 'water-can-wrapper';
-  
-  // Create the item element
-  const waterCan = document.createElement('div');
-  waterCan.className = 'water-can';
-  
-  // Add item to wrapper
-  wrapper.appendChild(waterCan);
-  
-  // Add click handler to just remove the item
-  wrapper.onclick = () => {
-    if (gameActive) {
-      wrapper.remove();
-    }
-  };
-  
-  // Add the wrapped item to the random cell
-  randomCell.appendChild(wrapper);
+
+  // Use a template literal to create the wrapper and water-can element
+  randomCell.innerHTML = `
+    <div class="water-can-wrapper">
+      <div class="water-can"></div>
+    </div>
+  `;
+
+  const wrapper = randomCell.querySelector('.water-can-wrapper');
+  wrapper.addEventListener('click', () => {
+    if (gameActive) wrapper.remove();
+  });
 }
 
 // Initializes and starts a new game
@@ -57,12 +48,12 @@ function startGame() {
   if (gameActive) return;
   gameActive = true;
   createGrid();
-  spawnTimer = setInterval(spawnWaterCan, 1000);
+  spawnInterval = setInterval(spawnWaterCan, 1000);
 }
 
 function endGame() {
   gameActive = false;
-  clearInterval(spawnTimer);
+  clearInterval(spawnInterval);
 }
 
 // Set up click handler for the start button
