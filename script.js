@@ -15,6 +15,9 @@ function createGrid() {
   }
 }
 
+// Ensure the grid is created when the page loads
+createGrid();
+
 // Spawns a new item in a random grid cell
 function spawnWaterCan() {
   if (!gameActive) return; // Stop if the game is not active
