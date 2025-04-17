@@ -6,28 +6,24 @@ let spawnInterval;          // Holds the interval for spawning items
 
 // Creates the 3x3 game grid where items will appear
 function createGrid() {
-  // Get the container element for the grid
   const grid = document.querySelector('.game-grid');
-  // Clear any existing grid cells
-  grid.innerHTML = '';
-  // Create 9 cells (3x3 grid)
+  grid.innerHTML = ''; // Clear any existing grid cells
   for (let i = 0; i < 9; i++) {
     const cell = document.createElement('div');
-    cell.className = 'grid-cell';
+    cell.className = 'grid-cell'; // Each cell represents a grid square
     grid.appendChild(cell);
   }
 }
 
 // Spawns a new item in a random grid cell
 function spawnWaterCan() {
-  if (!gameActive) return;
+  if (!gameActive) return; // Stop if the game is not active
   const cells = document.querySelectorAll('.grid-cell');
   
-  // Clear any existing items from all cells
-  for (let i = 0; i < cells.length; i++) {
-    cells[i].innerHTML = '';
-  }
+  // Clear all cells before spawning a new water can
+  cells.forEach(cell => (cell.innerHTML = ''));
 
+  // Select a random cell from the grid to place the water can
   const randomCell = cells[Math.floor(Math.random() * cells.length)];
 
   // Use a template literal to create the wrapper and water-can element
@@ -39,21 +35,21 @@ function spawnWaterCan() {
 
   const wrapper = randomCell.querySelector('.water-can-wrapper');
   wrapper.addEventListener('click', () => {
-    if (gameActive) wrapper.remove();
+    if (gameActive) wrapper.remove(); // Remove the water can when clicked
   });
 }
 
 // Initializes and starts a new game
 function startGame() {
-  if (gameActive) return;
+  if (gameActive) return; // Prevent starting a new game if one is already active
   gameActive = true;
-  createGrid();
-  spawnInterval = setInterval(spawnWaterCan, 1000);
+  createGrid(); // Set up the game grid
+  spawnInterval = setInterval(spawnWaterCan, 1000); // Spawn water cans every second
 }
 
 function endGame() {
-  gameActive = false;
-  clearInterval(spawnInterval);
+  gameActive = false; // Mark the game as inactive
+  clearInterval(spawnInterval); // Stop spawning water cans
 }
 
 // Set up click handler for the start button
