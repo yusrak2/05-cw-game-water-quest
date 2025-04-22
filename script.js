@@ -35,11 +35,6 @@ function spawnWaterCan() {
       <div class="water-can"></div>
     </div>
   `;
-
-  const wrapper = randomCell.querySelector('.water-can-wrapper');
-  wrapper.addEventListener('click', () => {
-    if (gameActive) wrapper.remove(); // Remove the water can when clicked
-  });
 }
 
 // Initializes and starts a new game

@@ -13,8 +13,7 @@ The starter files already include:
 - A **logo image** from charity: water
 - Working code that:
   - Starts the game when the start button is clicked  
-  - Makes jerry cans pop up randomly  
-  - Makes cans disappear when clicked  
+  - Makes jerry cans pop up randomly
 
 ## What You Need to Add
 
