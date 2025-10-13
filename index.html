@@ -2,37 +2,33 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Water Quest</title>
-  <link href="style.css" rel="stylesheet" type="text/css" />
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="container">
-    <!-- Start Screen -->
-    <div id="start-screen">
-      <img src="img/cw_logo_horizontal.png" alt="Charity Water Logo" class="logo">
-      <h1>Water Quest</h1>
-      <p class="game-instructions">Tap the yellow jerry cans to collect clean water — avoid the bombs!</p>
-      <button id="start-game">Start Game</button>
-    </div>
-
-    <!-- Game Screen -->
-    <div id="game-screen" class="hidden">
-      <div class="stats">
-        <p>💧 Cans: <span id="current-cans">0</span></p>
-        <p>⏱ Time: <span id="timer">30</span>s</p>
-      </div>
-      <div class="game-grid"></div>
-    </div>
-
-    <!-- End Screen -->
-    <div id="end-screen" class="hidden">
-      <h2 id="end-message"></h2>
-      <p class="final-score">Final Score: <span id="final-score">0</span></p>
-      <button id="play-again">Play Again</button>
-      <a href="https://www.charitywater.org/" target="_blank" class="donate-btn">Donate to charity: water</a>
-    </div>
+  <div id="start-screen">
+    <img src="img/cw_logo_horizontal.png" alt="Charity Water Logo" class="logo">
+    <h1>Water Quest</h1>
+    <p class="game-instructions">Tap the yellow jerry cans to collect clean water — avoid the bombs!</p>
+    <button id="start-game">Start Game</button>
   </div>
+
+  <div id="game-screen" class="hidden">
+    <div class="stats">
+      <p>💧 Cans: <span id="current-cans">0</span></p>
+      <p>⏱ Time: <span id="timer">30</span>s</p>
+    </div>
+    <div class="game-grid"></div>
+  </div>
+
+  <div id="end-screen" class="hidden">
+    <h2 id="end-message"></h2>
+    <p class="final-score">Final Score: <span id="final-score">0</span></p>
+    <button id="play-again">Play Again</button>
+    <a href="https://www.charitywater.org/" target="_blank" class="donate-btn">Donate to charity: water</a>
+  </div>
+
   <script src="script.js"></script>
 </body>
 </html>
