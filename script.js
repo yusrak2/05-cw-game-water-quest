@@ -26,7 +26,8 @@ function spawnItem() {
   const grid = document.querySelector('.game-grid');
   const gridCells = grid.querySelectorAll('.grid-cell');
   gridCells.forEach(cell => {
-    // Randomly decide if this cell gets a bomb or a water can
+    // Remove previous content and listeners
+    cell.innerHTML = '';
     const item = Math.random() < 0.2 ? 'bomb' : 'can'; // 20% bomb, 80% can
     if (item === 'bomb') {
       cell.innerHTML = `
@@ -39,7 +40,8 @@ function spawnItem() {
         if (!gameActive) return;
         currentCans = Math.max(0, currentCans - 1);
         document.getElementById('current-cans').textContent = currentCans;
-        spawnItem(); // Refresh grid
+        // Only update this cell
+        cell.innerHTML = '';
       }, { once: true });
     } else {
       cell.innerHTML = `
@@ -52,7 +54,8 @@ function spawnItem() {
         if (!gameActive) return;
         currentCans++;
         document.getElementById('current-cans').textContent = currentCans;
-        spawnItem(); // Refresh grid
+        // Only update this cell
+        cell.innerHTML = '';
       }, { once: true });
     }
   });
@@ -69,7 +72,7 @@ function startGame() {
   createGrid();
   showScreen('game-screen');
   
-  // Spawn an item every second
+  // Fill the grid with items every second
   spawnInterval = setInterval(spawnItem, 1000);
 
   // Timer countdown
