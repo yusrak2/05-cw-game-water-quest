@@ -25,49 +25,37 @@ function spawnItem() {
   if (!gameActive) return;
   const grid = document.querySelector('.game-grid');
   const gridCells = grid.querySelectorAll('.grid-cell');
-  
-  // Randomly pick a cell to place the item
-  const randomCellIndex = Math.floor(Math.random() * gridCells.length);
-  const cell = gridCells[randomCellIndex];
-
-  // Prepare array: 8 cans, 1 bomb
-  let items = Array(8).fill('can').concat(['bomb']);
-  // Shuffle items
-  for (let i = items.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [items[i], items[j]] = [items[j], items[i]];
-  }
-
-  const item = items[Math.floor(Math.random() * items.length)];
-
-  // Place items in the cell
-  if (item === 'bomb') {
-    cell.innerHTML = `
-      <div class="bomb-wrapper">
-        <div class="bomb"></div>
-      </div>
-    `;
-    const bomb = cell.querySelector('.bomb');
-    bomb.addEventListener('click', function handleBombClick(e) {
-      if (!gameActive) return;
-      currentCans = Math.max(0, currentCans - 1);
-      document.getElementById('current-cans').textContent = currentCans;
-      spawnItem(); // Spawn a new item in the same spot
-    }, { once: true });
-  } else {
-    cell.innerHTML = `
-      <div class="water-can-wrapper">
-        <div class="water-can"></div>
-      </div>
-    `;
-    const can = cell.querySelector('.water-can');
-    can.addEventListener('click', function handleCanClick(e) {
-      if (!gameActive) return;
-      currentCans++;
-      document.getElementById('current-cans').textContent = currentCans;
-      spawnItem(); // Spawn a new item in the same spot
-    }, { once: true });
-  }
+  gridCells.forEach(cell => {
+    // Randomly decide if this cell gets a bomb or a water can
+    const item = Math.random() < 0.2 ? 'bomb' : 'can'; // 20% bomb, 80% can
+    if (item === 'bomb') {
+      cell.innerHTML = `
+        <div class="bomb-wrapper">
+          <div class="bomb"></div>
+        </div>
+      `;
+      const bomb = cell.querySelector('.bomb');
+      bomb.addEventListener('click', function handleBombClick(e) {
+        if (!gameActive) return;
+        currentCans = Math.max(0, currentCans - 1);
+        document.getElementById('current-cans').textContent = currentCans;
+        spawnItem(); // Refresh grid
+      }, { once: true });
+    } else {
+      cell.innerHTML = `
+        <div class="water-can-wrapper">
+          <div class="water-can"></div>
+        </div>
+      `;
+      const can = cell.querySelector('.water-can');
+      can.addEventListener('click', function handleCanClick(e) {
+        if (!gameActive) return;
+        currentCans++;
+        document.getElementById('current-cans').textContent = currentCans;
+        spawnItem(); // Refresh grid
+      }, { once: true });
+    }
+  });
 }
 
 // Function to start the game
