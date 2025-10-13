@@ -15,6 +15,7 @@ function createGrid() {
     cell.className = 'grid-cell';
     grid.appendChild(cell);
   }
+}
 
 // Ensure the grid is created when the page loads
 createGrid();
@@ -25,9 +26,11 @@ function spawnItem() {
   const grid = document.querySelector('.game-grid');
   const gridCells = grid.querySelectorAll('.grid-cell');
   gridCells.forEach(cell => {
-    cell.innerHTML = '';
+    cell.innerHTML = ''; // Clear cell
+
     const item = Math.random() < 0.2 ? 'bomb' : 'can'; // 20% bomb, 80% can
-  if (item === 'bomb') {
+    
+    if (item === 'bomb') {
       cell.innerHTML = `
         <div class="bomb-wrapper">
           <div class="bomb"></div>
@@ -41,8 +44,6 @@ function spawnItem() {
         cell.innerHTML = '';
       }, { once: true });
     } else {
-      console.log('WATER CAN CELL:', cell);
-      console.log('Water can generated in cell:', cell);
       cell.innerHTML = `
         <div class="water-can-wrapper">
           <div class="water-can"></div>
@@ -58,7 +59,6 @@ function spawnItem() {
     }
   });
 }
-}
 
 // Function to start the game
 function startGame() {
@@ -69,11 +69,13 @@ function startGame() {
   gameActive = true;
   document.getElementById('current-cans').textContent = currentCans;
   document.getElementById('timer').textContent = timeLeft;
+  
+  // Show the game screen and hide start screen
   showScreen('game-screen');
-  createGrid();
+  
   // Start spawning items every second
-  spawnItem();
   spawnInterval = setInterval(spawnItem, 1000);
+  
   // Start timer countdown
   timerInterval = setInterval(() => {
     timeLeft--;
@@ -83,6 +85,7 @@ function startGame() {
     }
   }, 1000);
 }
+
 // End the game and show the end screen
 function endGame() {
   gameActive = false;
@@ -92,6 +95,7 @@ function endGame() {
   document.getElementById('end-message').textContent = currentCans >= GOAL_CANS ? 'Congratulations! You collected enough water!' : 'Time is up! Try again.';
   showScreen('end-screen');
 }
+
 // Play again button handler
 document.getElementById('play-again').addEventListener('click', () => {
   showScreen('start-screen');
