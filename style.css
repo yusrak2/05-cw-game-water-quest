@@ -199,10 +199,7 @@ h1 img {
 }
 
 .water-can-wrapper {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  position: static;
   width: 70px;
   height: 70px;
   /* Ensure the wrapper is properly centered */
