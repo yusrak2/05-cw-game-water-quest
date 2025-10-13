@@ -106,8 +106,8 @@ button:hover, .donate-btn:hover {
 
 .game-grid {
   display: grid;
-  grid-template-columns: repeat(9, 1fr); /* 9 columns */
-  grid-template-rows: repeat(9, 1fr); /* 9 rows */
+  grid-template-columns: repeat(3, 1fr); /* 3 columns */
+  grid-template-rows: repeat(3, 1fr); /* 3 rows */
   gap: 8px;
   justify-items: center;
   align-items: center;

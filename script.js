@@ -11,8 +11,8 @@ function createGrid() {
   const grid = document.querySelector('.game-grid');
   grid.innerHTML = '';
   
-  // Create 9x9 grid (81 cells)
-  for (let i = 0; i < 81; i++) {
+  // Create 3x3 grid (9 cells)
+  for (let i = 0; i < 9; i++) {
     const cell = document.createElement('div');
     cell.className = 'grid-cell';
     grid.appendChild(cell);
