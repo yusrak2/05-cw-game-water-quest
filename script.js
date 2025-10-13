@@ -26,7 +26,6 @@ function spawnItem() {
   const grid = document.querySelector('.game-grid');
   const gridCells = grid.querySelectorAll('.grid-cell');
   gridCells.forEach(cell => {
-    // Remove previous content and listeners
     cell.innerHTML = '';
     const item = Math.random() < 0.2 ? 'bomb' : 'can'; // 20% bomb, 80% can
     if (item === 'bomb') {
@@ -40,7 +39,6 @@ function spawnItem() {
         if (!gameActive) return;
         currentCans = Math.max(0, currentCans - 1);
         document.getElementById('current-cans').textContent = currentCans;
-        // Only update this cell
         cell.innerHTML = '';
       }, { once: true });
     } else {
@@ -54,7 +52,6 @@ function spawnItem() {
         if (!gameActive) return;
         currentCans++;
         document.getElementById('current-cans').textContent = currentCans;
-        // Only update this cell
         cell.innerHTML = '';
       }, { once: true });
     }
