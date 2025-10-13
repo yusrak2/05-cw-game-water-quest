@@ -15,7 +15,6 @@ function createGrid() {
     cell.className = 'grid-cell';
     grid.appendChild(cell);
   }
-}
 
 // Ensure the grid is created when the page loads
 createGrid();
@@ -59,20 +58,17 @@ function spawnItem() {
     }
   });
 }
+}
 
 // Function to start the game
 function startGame() {
   if (gameActive) return;
   gameActive = true;
-  currentCans = 0;
-  timeLeft = 30;
-  currentCans = 0;
-  timeLeft = 30;
-  document.getElementById('current-cans').textContent = 0;
-  document.getElementById('timer').textContent = 30;
-  showScreen('start-screen');
-  gameActive = false;
-});
+  document.getElementById('current-cans').textContent = currentCans;
+  document.getElementById('timer').textContent = timeLeft;
+  showScreen('game-screen');
+  // Start the grid filling interval and timer here if needed
+}
 
 // Set up click handler for the start button
 document.getElementById('start-game').addEventListener('click', startGame);
