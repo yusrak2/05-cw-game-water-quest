@@ -100,7 +100,12 @@ function endGame() {
   clearInterval(spawnInterval);
   clearInterval(timerInterval);
   document.getElementById('final-score').textContent = currentCans;
-  document.getElementById('end-message').textContent = currentCans >= GOAL_CANS ? 'Congratulations! You collected enough water!' : 'Time is up! Try again.';
+    if (currentCans > 20) {
+      document.getElementById('end-message').textContent = 'You win!';
+      showConfetti();
+    } else {
+      document.getElementById('end-message').textContent = 'Try again :('; 
+    }
   showScreen('end-screen');
 }
 
@@ -113,6 +118,21 @@ document.getElementById('play-again').addEventListener('click', () => {
 document.getElementById('start-game').addEventListener('click', startGame);
 
 // Utility function to show the correct screen
+// Show confetti animation
+function showConfetti() {
+  const confettiContainer = document.createElement('div');
+  confettiContainer.className = 'confetti-container';
+  document.body.appendChild(confettiContainer);
+  for (let i = 0; i < 60; i++) {
+    const confetti = document.createElement('div');
+    confetti.className = 'confetti';
+    confetti.style.left = Math.random() * 100 + 'vw';
+    confetti.style.backgroundColor = `hsl(${Math.random()*360},100%,60%)`;
+    confettiContainer.appendChild(confetti);
+    setTimeout(() => confetti.remove(), 2500);
+  }
+  setTimeout(() => confettiContainer.remove(), 3000);
+}
 function showScreen(screenId) {
   const screens = ['start-screen', 'game-screen', 'end-screen'];
   screens.forEach(id => {
