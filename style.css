@@ -173,10 +173,17 @@ h1 img {
 
 .game-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 15px;
-  margin: 0 auto;
-  max-width: 500px;
+  grid-template-columns: repeat(5, 1fr); /* 5 columns, adjust as needed */
+  gap: 24px;
+  justify-items: center;
+  align-items: center;
+  margin: 32px auto;
+  max-width: 700px;
+  background-color: rgba(255, 255, 255, 0.9);
+  padding: 15px;
+  border-radius: 12px;
+}
+/* ...existing code... */
 }
 
 .grid-cell {
@@ -303,10 +310,4 @@ button:hover, .donate-btn:hover {
   color: #333;
   border: 2px solid #FFC907;
   border-radius: 8px;
-}
-
-.game-grid {
-  background-color: rgba(255, 255, 255, 0.9);
-  padding: 15px;
-  border-radius: 12px;
 }
