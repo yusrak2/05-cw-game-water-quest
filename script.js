@@ -124,6 +124,36 @@ function showConfetti() {
   }, 4000);
 }
 }
+function showScreen(screenId) {
+  document.getElementById('start-screen').classList.add('hidden');
+  document.getElementById('game-screen').classList.add('hidden');
+  document.getElementById('end-screen').classList.add('hidden');
+  document.getElementById(screenId).classList.remove('hidden');
+}
+
+function startGame() {
+  showScreen('game-screen');
+  // ... keep your existing code here ...
+}
+
+function endGame() {
+  gameActive = false;
+  clearInterval(spawnInterval);
+  clearInterval(timerInterval);
+  document.getElementById('final-score').textContent = currentCans;
+  const endMessage = document.getElementById('end-message');
+  endMessage.textContent = currentCans >= 20 ? 'You brought clean water! 💧' : 'Try Again!';
+  showScreen('end-screen');
+}
+
+// Play again button
+document.getElementById('play-again').addEventListener('click', () => {
+  currentCans = 0;
+  timeLeft = 30;
+  document.getElementById('current-cans').textContent = 0;
+  document.getElementById('timer').textContent = 30;
+  showScreen('start-screen');
+});
 
 // Set up click handler for the start button
 document.getElementById('start-game').addEventListener('click', startGame);

@@ -237,3 +237,74 @@ button {
   margin: 30px auto 0;
   transition: background-color 0.2s;
 }
+/* ---- Water Quest Visual Update ---- */
+
+body {
+  background: linear-gradient(to bottom, #00AEEF 0%, #8BD1CB 100%);
+  background-attachment: fixed;
+  color: #333;
+  font-family: "Avenir", "Proxima Nova", sans-serif;
+}
+
+.logo {
+  display: block;
+  margin: 0 auto 20px auto;
+  height: 70px;
+}
+
+.hidden {
+  display: none;
+}
+
+h1 {
+  color: #FFC907;
+  font-size: 42px;
+  text-shadow: 1px 1px 2px #006;
+}
+
+button, .donate-btn {
+  background-color: #FFC907;
+  color: #222;
+  border: none;
+  padding: 14px 28px;
+  font-size: 18px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: transform 0.2s, background-color 0.2s;
+  text-align: center;
+  font-weight: bold;
+}
+
+button:hover, .donate-btn:hover {
+  background-color: #FFD83A;
+  transform: scale(1.05);
+}
+
+.donate-btn {
+  display: inline-block;
+  margin-top: 20px;
+  text-decoration: none;
+}
+
+.final-score {
+  font-size: 24px;
+  color: #2E9DF7;
+  margin-bottom: 15px;
+}
+
+#start-screen, #end-screen {
+  text-align: center;
+}
+
+.stats {
+  background-color: rgba(255, 255, 255, 0.9);
+  color: #333;
+  border: 2px solid #FFC907;
+  border-radius: 8px;
+}
+
+.game-grid {
+  background-color: rgba(255, 255, 255, 0.9);
+  padding: 15px;
+  border-radius: 12px;
+}
