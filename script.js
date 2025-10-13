@@ -66,39 +66,6 @@ function startGame() {
   gameActive = true;
   currentCans = 0;
   timeLeft = 30;
-  // Pick a random cell for the bomb
-  const bombIndex = Math.floor(Math.random() * gridCells.length);
-  gridCells.forEach((cell, i) => {
-    cell.innerHTML = '';
-    if (i === bombIndex) {
-      cell.innerHTML = `
-        <div class="bomb-wrapper">
-          <div class="bomb"></div>
-        </div>
-      `;
-      const bomb = cell.querySelector('.bomb');
-      bomb.addEventListener('click', function handleBombClick(e) {
-        if (!gameActive) return;
-        currentCans = Math.max(0, currentCans - 1);
-        document.getElementById('current-cans').textContent = currentCans;
-        cell.innerHTML = '';
-      }, { once: true });
-    } else {
-      cell.innerHTML = `
-        <div class="water-can-wrapper">
-          <div class="water-can"></div>
-        </div>
-      `;
-      console.log('WATER CAN CELL:', cell);
-      const can = cell.querySelector('.water-can');
-      can.addEventListener('click', function handleCanClick(e) {
-        if (!gameActive) return;
-        currentCans++;
-        document.getElementById('current-cans').textContent = currentCans;
-        cell.innerHTML = '';
-      }, { once: true });
-    }
-  });
   currentCans = 0;
   timeLeft = 30;
   document.getElementById('current-cans').textContent = 0;
