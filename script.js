@@ -118,3 +118,18 @@ document.getElementById('play-again').addEventListener('click', () => {
 
 // Set up click handler for the start button
 document.getElementById('start-game').addEventListener('click', startGame);
+
+// Utility function to show the correct screen
+function showScreen(screenId) {
+  const screens = ['start-screen', 'game-screen', 'end-screen'];
+  screens.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) {
+      if (id === screenId) {
+        el.classList.remove('hidden');
+      } else {
+        el.classList.add('hidden');
+      }
+    }
+  });
+}
