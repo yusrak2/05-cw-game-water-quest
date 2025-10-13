@@ -203,16 +203,18 @@ h1 img {
 }
 
 .water-can {
-  width: 100%;
-  height: 100%;
+  width: 80px;
+  height: 80px;
   background-image: url('img/water-can.png');
-  background-size: cover;
+  background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
   cursor: pointer;
   border-radius: 50%;
   animation: popUp 0.5s cubic-bezier(0.17, 0.67, 0.34, 2);
-  transform-origin: center; /* Ensure scaling happens from the center */
+  transform-origin: center;
+  background-color: #FFC907;
+  box-shadow: 0 0 10px 2px #FFC90744;
 }
 
 @keyframes popUp {
