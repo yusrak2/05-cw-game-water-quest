@@ -10,7 +10,7 @@
 .bomb {
   width: 80px;
   height: 80px;
-  background-image: url('img/bomb.png');
+  background-image: url('img/bomb1.png');
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
@@ -173,17 +173,16 @@ h1 img {
 
 .game-grid {
   display: grid;
-  grid-template-columns: repeat(5, 1fr); /* 5 columns, adjust as needed */
-  gap: 24px;
+  grid-template-columns: repeat(9, 1fr); /* 9 columns */
+  grid-template-rows: repeat(9, 1fr); /* 9 rows */
+  gap: 8px;
   justify-items: center;
   align-items: center;
   margin: 32px auto;
-  max-width: 700px;
+  max-width: 800px;
   background-color: rgba(255, 255, 255, 0.9);
   padding: 15px;
   border-radius: 12px;
-}
-/* ...existing code... */
 }
 
 .grid-cell {
@@ -212,7 +211,7 @@ h1 img {
 .water-can {
   width: 80px;
   height: 80px;
-  background-image: url('img/water-can.png');
+  background-image: url('img/charitywatercan-removebg-preview.png');
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
