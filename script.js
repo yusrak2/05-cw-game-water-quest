@@ -24,48 +24,42 @@ createGrid();
 function spawnWaterCan() {
   if (!gameActive) return; // Stop if the game is not active
   const cells = document.querySelectorAll('.grid-cell');
-  
-  // Clear all cells before spawning a new water can
-  cells.forEach(cell => (cell.innerHTML = ''));
-
-  // Select a random cell from the grid to place the water can
-  const randomCell = cells[Math.floor(Math.random() * cells.length)];
-
-  // Decide randomly: 70% chance for can, 30% for bomb
-  const isBomb = Math.random() < 0.3;
-  if (isBomb) {
-    randomCell.innerHTML = `
-      <div class="bomb-wrapper">
-        <div class="bomb"></div>
-      </div>
-    `;
-    const bomb = randomCell.querySelector('.bomb');
-    if (bomb) {
-      bomb.addEventListener('click', function handleBombClick(e) {
-        if (!gameActive) return;
-        currentCans = Math.max(0, currentCans - 1);
-        document.getElementById('current-cans').textContent = currentCans;
-        bomb.style.pointerEvents = 'none';
-      }, { once: true });
+  // For each cell, randomly place a water can or a bomb
+  cells.forEach(cell => {
+    cell.innerHTML = '';
+    const isBomb = Math.random() < 0.3;
+    if (isBomb) {
+      cell.innerHTML = `
+        <div class="bomb-wrapper">
+          <div class="bomb"></div>
+        </div>
+      `;
+      const bomb = cell.querySelector('.bomb');
+      if (bomb) {
+        bomb.addEventListener('click', function handleBombClick(e) {
+          if (!gameActive) return;
+          currentCans = Math.max(0, currentCans - 1);
+          document.getElementById('current-cans').textContent = currentCans;
+          bomb.style.pointerEvents = 'none';
+        }, { once: true });
+      }
+    } else {
+      cell.innerHTML = `
+        <div class="water-can-wrapper">
+          <div class="water-can"></div>
+        </div>
+      `;
+      const can = cell.querySelector('.water-can');
+      if (can) {
+        can.addEventListener('click', function handleCanClick(e) {
+          if (!gameActive) return;
+          currentCans++;
+          document.getElementById('current-cans').textContent = currentCans;
+          can.style.pointerEvents = 'none';
+        }, { once: true });
+      }
     }
-  } else {
-    randomCell.innerHTML = `
-      <div class="water-can-wrapper">
-        <div class="water-can"></div>
-      </div>
-    `;
-    // Add click event for the can
-    const can = randomCell.querySelector('.water-can');
-    if (can) {
-      can.addEventListener('click', function handleCanClick(e) {
-        if (!gameActive) return;
-        currentCans++;
-        document.getElementById('current-cans').textContent = currentCans;
-        // Prevent further clicks on this can
-        can.style.pointerEvents = 'none';
-      }, { once: true });
-    }
-  }
+  });
 }
 
 
