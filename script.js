@@ -28,7 +28,7 @@ function spawnItem() {
   gridCells.forEach(cell => {
     cell.innerHTML = '';
     const item = Math.random() < 0.2 ? 'bomb' : 'can'; // 20% bomb, 80% can
-    if (item === 'bomb') {
+  if (item === 'bomb') {
       cell.innerHTML = `
         <div class="bomb-wrapper">
           <div class="bomb"></div>
@@ -42,6 +42,7 @@ function spawnItem() {
         cell.innerHTML = '';
       }, { once: true });
     } else {
+      console.log('Water can generated in cell:', cell);
       cell.innerHTML = `
         <div class="water-can-wrapper">
           <div class="water-can"></div>
