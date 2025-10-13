@@ -42,6 +42,7 @@ function spawnItem() {
         cell.innerHTML = '';
       }, { once: true });
     } else {
+      console.log('WATER CAN CELL:', cell);
       console.log('Water can generated in cell:', cell);
       cell.innerHTML = `
         <div class="water-can-wrapper">
@@ -65,38 +66,39 @@ function startGame() {
   gameActive = true;
   currentCans = 0;
   timeLeft = 30;
-  document.getElementById('current-cans').textContent = currentCans;
-  document.getElementById('timer').textContent = timeLeft;
-  createGrid();
-  showScreen('game-screen');
-  
-  // Fill the grid with items every second
-  spawnInterval = setInterval(spawnItem, 1000);
-
-  // Timer countdown
-  timerInterval = setInterval(() => {
-    if (!gameActive) return;
-    timeLeft--;
-    document.getElementById('timer').textContent = timeLeft;
-    if (timeLeft <= 0) {
-      endGame();
+  // Pick a random cell for the bomb
+  const bombIndex = Math.floor(Math.random() * gridCells.length);
+  gridCells.forEach((cell, i) => {
+    cell.innerHTML = '';
+    if (i === bombIndex) {
+      cell.innerHTML = `
+        <div class="bomb-wrapper">
+          <div class="bomb"></div>
+        </div>
+      `;
+      const bomb = cell.querySelector('.bomb');
+      bomb.addEventListener('click', function handleBombClick(e) {
+        if (!gameActive) return;
+        currentCans = Math.max(0, currentCans - 1);
+        document.getElementById('current-cans').textContent = currentCans;
+        cell.innerHTML = '';
+      }, { once: true });
+    } else {
+      cell.innerHTML = `
+        <div class="water-can-wrapper">
+          <div class="water-can"></div>
+        </div>
+      `;
+      console.log('WATER CAN CELL:', cell);
+      const can = cell.querySelector('.water-can');
+      can.addEventListener('click', function handleCanClick(e) {
+        if (!gameActive) return;
+        currentCans++;
+        document.getElementById('current-cans').textContent = currentCans;
+        cell.innerHTML = '';
+      }, { once: true });
     }
-  }, 1000);
-}
-
-// Function to end the game
-function endGame() {
-  gameActive = false;
-  clearInterval(spawnInterval);
-  clearInterval(timerInterval);
-  document.getElementById('final-score').textContent = currentCans;
-  const endMessage = document.getElementById('end-message');
-  endMessage.textContent = currentCans >= 20 ? 'You brought clean water! 💧' : 'Try Again!';
-  showScreen('end-screen');
-}
-
-// Play again button
-document.getElementById('play-again').addEventListener('click', () => {
+  });
   currentCans = 0;
   timeLeft = 30;
   document.getElementById('current-cans').textContent = 0;
