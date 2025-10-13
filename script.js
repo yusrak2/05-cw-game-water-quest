@@ -125,27 +125,6 @@ function showConfetti() {
     confettiContainer.remove();
   }, 4000);
 }
-function showScreen(screenId) {
-  document.getElementById('start-screen').classList.add('hidden');
-  document.getElementById('game-screen').classList.add('hidden');
-  document.getElementById('end-screen').classList.add('hidden');
-  document.getElementById(screenId).classList.remove('hidden');
-}
-
-function startGame() {
-  showScreen('game-screen');
-  // ... keep your existing code here ...
-}
-
-function endGame() {
-  gameActive = false;
-  clearInterval(spawnInterval);
-  clearInterval(timerInterval);
-  document.getElementById('final-score').textContent = currentCans;
-  const endMessage = document.getElementById('end-message');
-  endMessage.textContent = currentCans >= 20 ? 'You brought clean water! 💧' : 'Try Again!';
-  showScreen('end-screen');
-}
 
 // Play again button
 document.getElementById('play-again').addEventListener('click', () => {
