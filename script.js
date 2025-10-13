@@ -68,16 +68,24 @@ function spawnWaterCan() {
   }
 }
 
-// Initializes and starts a new game
+
+function showScreen(screenId) {
+  document.getElementById('start-screen').classList.add('hidden');
+  document.getElementById('game-screen').classList.add('hidden');
+  document.getElementById('end-screen').classList.add('hidden');
+  document.getElementById(screenId).classList.remove('hidden');
+}
+
 function startGame() {
-  if (gameActive) return; // Prevent starting a new game if one is already active
+  if (gameActive) return;
   gameActive = true;
   currentCans = 0;
   timeLeft = 30;
   document.getElementById('current-cans').textContent = currentCans;
   document.getElementById('timer').textContent = timeLeft;
-  createGrid(); // Set up the game grid
-  spawnInterval = setInterval(spawnWaterCan, 1000); // Spawn water cans every second
+  createGrid();
+  showScreen('game-screen');
+  spawnInterval = setInterval(spawnWaterCan, 1000);
   timerInterval = setInterval(() => {
     if (!gameActive) return;
     timeLeft--;
@@ -89,22 +97,16 @@ function startGame() {
 }
 
 function endGame() {
-  gameActive = false; // Mark the game as inactive
-  clearInterval(spawnInterval); // Stop spawning water cans
-  clearInterval(timerInterval); // Stop timer
-  // Show achievement message
-  const achievement = document.getElementById('achievements');
-  achievement.innerHTML = '';
-  if (currentCans >= 20) {
-    achievement.textContent = 'You won! 🎉';
-    showConfetti();
-  } else {
-    achievement.textContent = 'Try Again!';
-  }
-  // Remove any remaining cans
-  document.querySelectorAll('.grid-cell').forEach(cell => cell.innerHTML = '');
+  gameActive = false;
+  clearInterval(spawnInterval);
+  clearInterval(timerInterval);
+  document.getElementById('final-score').textContent = currentCans;
+  const endMessage = document.getElementById('end-message');
+  endMessage.textContent = currentCans >= 20 ? 'You brought clean water! 💧' : 'Try Again!';
+  showScreen('end-screen');
+  showConfetti();
+}
 
-// Confetti effect
 function showConfetti() {
   const confettiContainer = document.createElement('div');
   confettiContainer.className = 'confetti-container';
@@ -122,7 +124,6 @@ function showConfetti() {
   setTimeout(() => {
     confettiContainer.remove();
   }, 4000);
-}
 }
 function showScreen(screenId) {
   document.getElementById('start-screen').classList.add('hidden');
@@ -153,6 +154,7 @@ document.getElementById('play-again').addEventListener('click', () => {
   document.getElementById('current-cans').textContent = 0;
   document.getElementById('timer').textContent = 30;
   showScreen('start-screen');
+  gameActive = false;
 });
 
 // Set up click handler for the start button
