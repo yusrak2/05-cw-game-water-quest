@@ -10,27 +10,28 @@ let timeLeft = 30;           // Seconds left in the game
 function createGrid() {
   const grid = document.querySelector('.game-grid');
   grid.innerHTML = '';
-  for (let i = 0; i < 81; i++) { // 81 cells (9x9 grid)
+  
+  // Create 9x9 grid (81 cells)
+  for (let i = 0; i < 81; i++) {
     const cell = document.createElement('div');
     cell.className = 'grid-cell';
     grid.appendChild(cell);
   }
 }
 
-// Ensure the grid is created when the page loads
-createGrid();
-
 // Spawns a new item in a random grid cell
-function spawnItem() {
-  if (!gameActive) return;
+function spawnItems() {
   const grid = document.querySelector('.game-grid');
   const gridCells = grid.querySelectorAll('.grid-cell');
-  gridCells.forEach(cell => {
-    cell.innerHTML = ''; // Clear cell
 
+  gridCells.forEach(cell => {
+    cell.innerHTML = ''; // Clear any previous item
+
+    // Randomly choose between water can (80%) or bomb (20%)
     const item = Math.random() < 0.2 ? 'bomb' : 'can'; // 20% bomb, 80% can
-    
+
     if (item === 'bomb') {
+      // Create bomb item
       cell.innerHTML = `
         <div class="bomb-wrapper">
           <div class="bomb"></div>
@@ -41,9 +42,10 @@ function spawnItem() {
         if (!gameActive) return;
         currentCans = Math.max(0, currentCans - 1);
         document.getElementById('current-cans').textContent = currentCans;
-        cell.innerHTML = '';
+        cell.innerHTML = ''; // Clear bomb after click
       }, { once: true });
     } else {
+      // Create water can item
       cell.innerHTML = `
         <div class="water-can-wrapper">
           <div class="water-can"></div>
@@ -54,29 +56,35 @@ function spawnItem() {
         if (!gameActive) return;
         currentCans++;
         document.getElementById('current-cans').textContent = currentCans;
-        cell.innerHTML = '';
+        cell.innerHTML = ''; // Clear water can after click
       }, { once: true });
     }
   });
 }
 
+
 // Function to start the game
 function startGame() {
-  if (gameActive) return;
+  if (gameActive) return; // Prevent starting a new game if one is already active
+
   // Reset game state
   currentCans = 0;
   timeLeft = 30;
   gameActive = true;
+
   document.getElementById('current-cans').textContent = currentCans;
   document.getElementById('timer').textContent = timeLeft;
-  
-  // Show the game screen and hide start screen
+
+  // Show the game screen and hide the start screen
   showScreen('game-screen');
-  
-  // Start spawning items every second
-  spawnInterval = setInterval(spawnItem, 1000);
-  
-  // Start timer countdown
+
+  // Create the grid once the game starts
+  createGrid();
+
+  // Start spawning items in the grid every 1 second
+  spawnInterval = setInterval(spawnItems, 1000);
+
+  // Start the timer countdown
   timerInterval = setInterval(() => {
     timeLeft--;
     document.getElementById('timer').textContent = timeLeft;
