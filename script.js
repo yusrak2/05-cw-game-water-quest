@@ -63,12 +63,39 @@ function spawnItem() {
 // Function to start the game
 function startGame() {
   if (gameActive) return;
+  // Reset game state
+  currentCans = 0;
+  timeLeft = 30;
   gameActive = true;
   document.getElementById('current-cans').textContent = currentCans;
   document.getElementById('timer').textContent = timeLeft;
   showScreen('game-screen');
-  // Start the grid filling interval and timer here if needed
+  createGrid();
+  // Start spawning items every second
+  spawnItem();
+  spawnInterval = setInterval(spawnItem, 1000);
+  // Start timer countdown
+  timerInterval = setInterval(() => {
+    timeLeft--;
+    document.getElementById('timer').textContent = timeLeft;
+    if (timeLeft <= 0) {
+      endGame();
+    }
+  }, 1000);
 }
+// End the game and show the end screen
+function endGame() {
+  gameActive = false;
+  clearInterval(spawnInterval);
+  clearInterval(timerInterval);
+  document.getElementById('final-score').textContent = currentCans;
+  document.getElementById('end-message').textContent = currentCans >= GOAL_CANS ? 'Congratulations! You collected enough water!' : 'Time is up! Try again.';
+  showScreen('end-screen');
+}
+// Play again button handler
+document.getElementById('play-again').addEventListener('click', () => {
+  showScreen('start-screen');
+});
 
 // Set up click handler for the start button
 document.getElementById('start-game').addEventListener('click', startGame);
