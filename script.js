@@ -24,11 +24,17 @@ createGrid();
 function spawnWaterCan() {
   if (!gameActive) return; // Stop if the game is not active
   const cells = document.querySelectorAll('.grid-cell');
-  // For each cell, randomly place a water can or a bomb
-  cells.forEach(cell => {
+  // Prepare array: 8 cans, 1 bomb
+  let items = Array(8).fill('can').concat(['bomb']);
+  // Shuffle items
+  for (let i = items.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [items[i], items[j]] = [items[j], items[i]];
+  }
+  // Place items in grid
+  cells.forEach((cell, idx) => {
     cell.innerHTML = '';
-    const isBomb = Math.random() < 0.3;
-    if (isBomb) {
+    if (items[idx] === 'bomb') {
       cell.innerHTML = `
         <div class="bomb-wrapper">
           <div class="bomb"></div>
@@ -40,7 +46,8 @@ function spawnWaterCan() {
           if (!gameActive) return;
           currentCans = Math.max(0, currentCans - 1);
           document.getElementById('current-cans').textContent = currentCans;
-          bomb.style.pointerEvents = 'none';
+          cell.innerHTML = '';
+          spawnWaterCan();
         }, { once: true });
       }
     } else {
@@ -55,7 +62,8 @@ function spawnWaterCan() {
           if (!gameActive) return;
           currentCans++;
           document.getElementById('current-cans').textContent = currentCans;
-          can.style.pointerEvents = 'none';
+          cell.innerHTML = '';
+          spawnWaterCan();
         }, { once: true });
       }
     }
