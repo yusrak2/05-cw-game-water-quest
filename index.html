@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Water Quest</title>
   <link href="style.css" rel="stylesheet" type="text/css" />
 </head>
@@ -10,20 +10,19 @@
   <div class="container">
     <!-- Start Screen -->
     <div id="start-screen">
-  <img src="img/cw_logo_horizontal.png" alt="Charity Water Logo" class="logo">
+      <img src="img/cw_logo_horizontal.png" alt="Charity Water Logo" class="logo">
       <h1>Water Quest</h1>
-  <p class="game-instructions">Tap the yellow jerry cans to collect clean water — avoid the bombs!</p>
+      <p class="game-instructions">Tap the yellow jerry cans to collect clean water — avoid the bombs!</p>
       <button id="start-game">Start Game</button>
     </div>
 
     <!-- Game Screen -->
-  <div id="game-screen" class="hidden">
-     <div class="stats">
+    <div id="game-screen" class="hidden">
+      <div class="stats">
         <p>💧 Cans: <span id="current-cans">0</span></p>
         <p>⏱ Time: <span id="timer">30</span>s</p>
       </div>
-      <div id="achievements" class="achievement"></div>
-  <div class="game-grid"></div>
+      <div class="game-grid"></div>
     </div>
 
     <!-- End Screen -->
