@@ -2,15 +2,15 @@
 const GOAL_CANS = 25;        // Total items needed to collect
 let currentCans = 0;         // Current number of items collected
 let gameActive = false;      // Tracks if game is currently running
-let spawnInterval;          // Holds the interval for spawning items
-let timerInterval;          // Holds the interval for the timer
-let timeLeft = 30;          // Seconds left in the game
+let spawnInterval;           // Holds the interval for spawning items
+let timerInterval;           // Holds the interval for the timer
+let timeLeft = 30;           // Seconds left in the game
 
-// Creates the 3x3 game grid where items will appear
+// Creates the 9x9 game grid where items will appear
 function createGrid() {
   const grid = document.querySelector('.game-grid');
   grid.innerHTML = '';
-  for (let i = 0; i < 9; i++) {
+  for (let i = 0; i < 81; i++) { // 81 cells (9x9 grid)
     const cell = document.createElement('div');
     cell.className = 'grid-cell';
     grid.appendChild(cell);
@@ -21,10 +21,15 @@ function createGrid() {
 createGrid();
 
 // Spawns a new item in a random grid cell
-function spawnWaterCan() {
+function spawnItem() {
   if (!gameActive) return;
   const grid = document.querySelector('.game-grid');
-  grid.innerHTML = '';
+  const gridCells = grid.querySelectorAll('.grid-cell');
+  
+  // Randomly pick a cell to place the item
+  const randomCellIndex = Math.floor(Math.random() * gridCells.length);
+  const cell = gridCells[randomCellIndex];
+
   // Prepare array: 8 cans, 1 bomb
   let items = Array(8).fill('can').concat(['bomb']);
   // Shuffle items
@@ -32,53 +37,40 @@ function spawnWaterCan() {
     const j = Math.floor(Math.random() * (i + 1));
     [items[i], items[j]] = [items[j], items[i]];
   }
-  // Place items in grid
-  items.forEach((item, idx) => {
-    const cell = document.createElement('div');
-    cell.className = 'grid-cell';
-    if (item === 'bomb') {
-      cell.innerHTML = `
-        <div class="bomb-wrapper">
-          <div class="bomb"></div>
-        </div>
-      `;
-      const bomb = cell.querySelector('.bomb');
-      if (bomb) {
-        bomb.addEventListener('click', function handleBombClick(e) {
-          if (!gameActive) return;
-          currentCans = Math.max(0, currentCans - 1);
-          document.getElementById('current-cans').textContent = currentCans;
-          spawnWaterCan();
-        }, { once: true });
-      }
-    } else {
-      cell.innerHTML = `
-        <div class="water-can-wrapper">
-          <div class="water-can"></div>
-        </div>
-      `;
-      const can = cell.querySelector('.water-can');
-      if (can) {
-        can.addEventListener('click', function handleCanClick(e) {
-          if (!gameActive) return;
-          currentCans++;
-          document.getElementById('current-cans').textContent = currentCans;
-          spawnWaterCan();
-        }, { once: true });
-      }
-    }
-    grid.appendChild(cell);
-  });
+
+  const item = items[Math.floor(Math.random() * items.length)];
+
+  // Place items in the cell
+  if (item === 'bomb') {
+    cell.innerHTML = `
+      <div class="bomb-wrapper">
+        <div class="bomb"></div>
+      </div>
+    `;
+    const bomb = cell.querySelector('.bomb');
+    bomb.addEventListener('click', function handleBombClick(e) {
+      if (!gameActive) return;
+      currentCans = Math.max(0, currentCans - 1);
+      document.getElementById('current-cans').textContent = currentCans;
+      spawnItem(); // Spawn a new item in the same spot
+    }, { once: true });
+  } else {
+    cell.innerHTML = `
+      <div class="water-can-wrapper">
+        <div class="water-can"></div>
+      </div>
+    `;
+    const can = cell.querySelector('.water-can');
+    can.addEventListener('click', function handleCanClick(e) {
+      if (!gameActive) return;
+      currentCans++;
+      document.getElementById('current-cans').textContent = currentCans;
+      spawnItem(); // Spawn a new item in the same spot
+    }, { once: true });
+  }
 }
 
-
-function showScreen(screenId) {
-  document.getElementById('start-screen').classList.add('hidden');
-  document.getElementById('game-screen').classList.add('hidden');
-  document.getElementById('end-screen').classList.add('hidden');
-  document.getElementById(screenId).classList.remove('hidden');
-}
-
+// Function to start the game
 function startGame() {
   if (gameActive) return;
   gameActive = true;
@@ -88,7 +80,11 @@ function startGame() {
   document.getElementById('timer').textContent = timeLeft;
   createGrid();
   showScreen('game-screen');
-  spawnInterval = setInterval(spawnWaterCan, 1000);
+  
+  // Spawn an item every second
+  spawnInterval = setInterval(spawnItem, 1000);
+
+  // Timer countdown
   timerInterval = setInterval(() => {
     if (!gameActive) return;
     timeLeft--;
@@ -99,6 +95,7 @@ function startGame() {
   }, 1000);
 }
 
+// Function to end the game
 function endGame() {
   gameActive = false;
   clearInterval(spawnInterval);
@@ -107,26 +104,6 @@ function endGame() {
   const endMessage = document.getElementById('end-message');
   endMessage.textContent = currentCans >= 20 ? 'You brought clean water! 💧' : 'Try Again!';
   showScreen('end-screen');
-  showConfetti();
-}
-
-function showConfetti() {
-  const confettiContainer = document.createElement('div');
-  confettiContainer.className = 'confetti-container';
-  document.body.appendChild(confettiContainer);
-  for (let i = 0; i < 120; i++) {
-    const confetti = document.createElement('div');
-    confetti.className = 'confetti';
-    confetti.style.left = Math.random() * 100 + 'vw';
-    confetti.style.animationDelay = (Math.random() * 2) + 's';
-    confetti.style.backgroundColor = [
-      '#FFC907', '#2E9DF7', '#8BD1CB', '#4FCB53', '#FF902A', '#F5402C', '#159A48', '#F16061'
-    ][Math.floor(Math.random() * 8)];
-    confettiContainer.appendChild(confetti);
-  }
-  setTimeout(() => {
-    confettiContainer.remove();
-  }, 4000);
 }
 
 // Play again button
