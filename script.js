@@ -1,5 +1,5 @@
 // Game state
-const GOAL_CANS = 25;
+const GOAL_CANS = 20;
 let currentCans = 0;
 let timeLeft = 30;
 let gameActive = false;
