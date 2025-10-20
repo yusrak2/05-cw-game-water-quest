@@ -249,10 +249,11 @@ function endGame() {
 
   finalScoreEl.textContent = currentCans;
   
-  if (currentCans >= GOAL_CANS) {
+  if (currentCans >= 20) {
     endMessageEl.textContent = "🎉 Amazing! You're a Water Champion!";
     playSound('win');
-  } else if (currentCans >= Math.ceil(GOAL_CANS * 0.5)) {
+    showConfetti();
+  } else if (currentCans >= 10) {
     endMessageEl.textContent = "👏 Great job! Keep it up!";
     playSound('timeout');
   } else {
@@ -268,6 +269,24 @@ function clearIntervals() {
   if (timerIntervalId) clearInterval(timerIntervalId);
   spawnIntervalId = null;
   timerIntervalId = null;
+}
+
+// Confetti function
+function showConfetti() {
+  const container = document.createElement('div');
+  container.className = 'confetti-container';
+  document.body.appendChild(container);
+  
+  for (let i = 0; i < 100; i++) {
+    const confetti = document.createElement('div');
+    confetti.className = 'confetti';
+    confetti.style.left = Math.random() * 100 + 'vw';
+    confetti.style.animationDelay = Math.random() * 0.5 + 's';
+    confetti.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 60%)`;
+    container.appendChild(confetti);
+  }
+  
+  setTimeout(() => container.remove(), 3000);
 }
 
 // Events
