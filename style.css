@@ -18,6 +18,37 @@
   animation: confetti-fall 2.5s linear forwards;
 }
 
+/* App header with logo shown on all screens */
+.app-header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 16px;
+  /* If you want it always pinned at top, uncomment:
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  background: transparent;
+  padding: 10px 0;
+  */
+}
+
+.logo {
+  height: 56px;
+  width: auto;
+  display: block;
+  max-width: 90vw;
+}
+
+/* If you pinned the header (fixed), add top spacing for screens:
+#start-screen, #game-screen, #end-screen {
+  margin-top: 80px;
+}
+*/
+
+
 @keyframes confetti-fall {
   0% {
     top: -30px;
