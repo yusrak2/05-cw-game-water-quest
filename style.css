@@ -335,3 +335,20 @@ button {
   color: white;
   border-color: #4CAF50;
 }
+/* Remove tap/active highlight and any click background */
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+.grid-cell,
+.grid-cell:active,
+.water-can-wrapper,
+.bomb-wrapper,
+.water-can,
+.bomb {
+  background: transparent !important;
+  outline: none;
+}
+.water-can:active,
+.bomb:active {
+  background: transparent !important;
+}
