@@ -352,3 +352,17 @@ button {
 .bomb:active {
   background: transparent !important;
 }
+
+.game-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* 3 columns */
+  grid-template-rows: repeat(3, 1fr); /* 3 rows */
+  gap: 8px;
+  justify-items: center;
+  align-items: center;
+  margin: 32px auto;
+  max-width: 800px;
+  background-color: transparent; /* Changed from rgba(255, 255, 255, 0.9) */
+  padding: 15px;
+  border-radius: 12px;
+}
