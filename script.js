@@ -5,6 +5,7 @@ let timeLeft = 30;
 let gameActive = false;
 let spawnIntervalId = null;
 let timerIntervalId = null;
+let milestoneShown = false;
 
 // Difficulty
 let currentDifficulty = 'medium';
@@ -13,6 +14,97 @@ const difficultySettings = {
   medium: { spawnInterval: 1000, itemDuration: 2000 },
   hard:   { spawnInterval: 600,  itemDuration: 1200 }
 };
+
+// Audio setup - using Web Audio API to generate simple sounds
+const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+
+function playSound(type) {
+  const oscillator = audioContext.createOscillator();
+  const gainNode = audioContext.createGain();
+  
+  oscillator.connect(gainNode);
+  gainNode.connect(audioContext.destination);
+  
+  const now = audioContext.currentTime;
+  
+  switch(type) {
+    case 'collect': // Water can collected - positive beep
+      oscillator.frequency.setValueAtTime(800, now);
+      oscillator.frequency.exponentialRampToValueAtTime(1200, now + 0.1);
+      gainNode.gain.setValueAtTime(0.3, now);
+      gainNode.gain.exponentialRampToValueAtTime(0.01, now + 0.15);
+      oscillator.start(now);
+      oscillator.stop(now + 0.15);
+      break;
+      
+    case 'bomb': // Bomb clicked - negative buzz
+      oscillator.type = 'sawtooth';
+      oscillator.frequency.setValueAtTime(200, now);
+      oscillator.frequency.exponentialRampToValueAtTime(100, now + 0.2);
+      gainNode.gain.setValueAtTime(0.3, now);
+      gainNode.gain.exponentialRampToValueAtTime(0.01, now + 0.2);
+      oscillator.start(now);
+      oscillator.stop(now + 0.2);
+      break;
+      
+    case 'milestone': // Halfway milestone - cheerful melody
+      const frequencies = [523, 659, 784]; // C, E, G chord
+      frequencies.forEach((freq, i) => {
+        const osc = audioContext.createOscillator();
+        const gain = audioContext.createGain();
+        osc.connect(gain);
+        gain.connect(audioContext.destination);
+        osc.frequency.setValueAtTime(freq, now);
+        gain.gain.setValueAtTime(0.15, now);
+        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.4);
+        osc.start(now + i * 0.1);
+        osc.stop(now + 0.4 + i * 0.1);
+      });
+      break;
+      
+    case 'win': // Game won - victory fanfare
+      const winNotes = [523, 659, 784, 1047]; // C, E, G, high C
+      winNotes.forEach((freq, i) => {
+        const osc = audioContext.createOscillator();
+        const gain = audioContext.createGain();
+        osc.connect(gain);
+        gain.connect(audioContext.destination);
+        osc.frequency.setValueAtTime(freq, now);
+        gain.gain.setValueAtTime(0.2, now);
+        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
+        osc.start(now + i * 0.15);
+        osc.stop(now + 0.3 + i * 0.15);
+      });
+      break;
+      
+    case 'timeout': // Time's up - descending tone
+      oscillator.type = 'sine';
+      oscillator.frequency.setValueAtTime(400, now);
+      oscillator.frequency.exponentialRampToValueAtTime(200, now + 0.5);
+      gainNode.gain.setValueAtTime(0.3, now);
+      gainNode.gain.exponentialRampToValueAtTime(0.01, now + 0.5);
+      oscillator.start(now);
+      oscillator.stop(now + 0.5);
+      break;
+  }
+}
+
+// Show milestone message
+function showMilestone(message) {
+  const milestone = document.createElement('div');
+  milestone.className = 'milestone-message';
+  milestone.textContent = message;
+  document.body.appendChild(milestone);
+  
+  setTimeout(() => {
+    milestone.classList.add('show');
+  }, 10);
+  
+  setTimeout(() => {
+    milestone.classList.remove('show');
+    setTimeout(() => milestone.remove(), 300);
+  }, 2000);
+}
 
 // DOM
 const startScreen   = document.getElementById('start-screen');
@@ -34,7 +126,6 @@ difficultyButtons.forEach(btn => {
     btn.classList.add('active');
     currentDifficulty = btn.dataset.difficulty;
 
-    // If game is running, apply new spawn speed immediately
     if (gameActive) {
       resetSpawnLoop();
     }
@@ -51,7 +142,7 @@ function createGrid() {
   }
 }
 
-// Spawn exactly one item per tick into a random empty cell
+// Spawn logic
 function spawnItemOnce() {
   const settings = difficultySettings[currentDifficulty];
   const cells = Array.from(document.querySelectorAll('.grid-cell'));
@@ -59,7 +150,7 @@ function spawnItemOnce() {
   if (empty.length === 0) return;
 
   const cell = empty[Math.floor(Math.random() * empty.length)];
-  const isBomb = Math.random() < 0.25; // 25% chance of bomb
+  const isBomb = Math.random() < 0.25;
 
   const wrapper = document.createElement('div');
   wrapper.className = isBomb ? 'bomb-wrapper' : 'water-can-wrapper';
@@ -70,11 +161,20 @@ function spawnItemOnce() {
   item.addEventListener('click', () => {
     if (!gameActive) return;
     if (isBomb) {
-      currentCans = Math.max(0, currentCans - 1); // -1 per bomb
+      currentCans = Math.max(0, currentCans - 1);
       flashCell(cell, '#F5402C');
+      playSound('bomb');
     } else {
-      currentCans += 1; // +1 per can
+      currentCans += 1;
       flashCell(cell, '#3CCB5D');
+      playSound('collect');
+      
+      // Check for milestone
+      if (currentCans === 10 && !milestoneShown) {
+        milestoneShown = true;
+        playSound('milestone');
+        showMilestone('🎉 Halfway there! Keep going!');
+      }
     }
     updateHUD();
     wrapper.remove();
@@ -83,7 +183,6 @@ function spawnItemOnce() {
   wrapper.appendChild(item);
   cell.appendChild(wrapper);
 
-  // Auto-remove after item duration
   setTimeout(() => {
     if (wrapper.parentNode) wrapper.remove();
   }, settings.itemDuration);
@@ -127,13 +226,13 @@ function startGame() {
   currentCans = 0;
   timeLeft = 30;
   gameActive = true;
+  milestoneShown = false;
   updateHUD();
 
   showScreen('game-screen');
   createGrid();
 
-  // Start spawning and timer
-  spawnItemOnce(); // immediate spawn
+  spawnItemOnce();
   resetSpawnLoop();
 
   timerIntervalId = setInterval(() => {
@@ -149,10 +248,17 @@ function endGame() {
   clearIntervals();
 
   finalScoreEl.textContent = currentCans;
-  endMessageEl.textContent =
-    currentCans >= GOAL_CANS ? '🎉 Amazing! You hit the goal!' :
-    currentCans >= Math.ceil(GOAL_CANS * 0.5) ? '👏 Great job! Keep it up!' :
-    '💧 Good try! Play again?';
+  
+  if (currentCans >= GOAL_CANS) {
+    endMessageEl.textContent = "🎉 Amazing! You're a Water Champion!";
+    playSound('win');
+  } else if (currentCans >= Math.ceil(GOAL_CANS * 0.5)) {
+    endMessageEl.textContent = "👏 Great job! Keep it up!";
+    playSound('timeout');
+  } else {
+    endMessageEl.textContent = "💧 Good try! Play again?";
+    playSound('timeout');
+  }
 
   showScreen('end-screen');
 }
@@ -167,18 +273,3 @@ function clearIntervals() {
 // Events
 startBtn.addEventListener('click', startGame);
 playAgainBtn.addEventListener('click', () => showScreen('start-screen'));
-
-// Confetti
-function showConfetti() {
-  const container = document.createElement('div');
-  container.className = 'confetti-container';
-  document.body.appendChild(container);
-  for (let i = 0; i < 60; i++) {
-    const c = document.createElement('div');
-    c.className = 'confetti';
-    c.style.left = Math.random() * 100 + 'vw';
-    c.style.backgroundColor = `hsl(${Math.floor(Math.random()*360)},100%,60%)`;
-    container.appendChild(c);
-  }
-  setTimeout(() => container.remove(), 2600);
-}
