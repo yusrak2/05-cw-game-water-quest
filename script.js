@@ -11,16 +11,16 @@ let currentDifficulty = 'medium';
 const difficultySettings = {
   easy:   { spawnInterval: 1500, itemDuration: 2500 },
   medium: { spawnInterval: 1000, itemDuration: 2000 },
-  hard:   { spawnInterval: 600,  itemDuration: 1500 }
+  hard:   { spawnInterval: 600,  itemDuration: 1200 }
 };
 
 // DOM
-const startScreen = document.getElementById('start-screen');
-const gameScreen  = document.getElementById('game-screen');
-const endScreen   = document.getElementById('end-screen');
-const startBtn    = document.getElementById('start-game');
-const playAgainBtn= document.getElementById('play-again');
-const gameGrid    = document.querySelector('.game-grid');
+const startScreen   = document.getElementById('start-screen');
+const gameScreen    = document.getElementById('game-screen');
+const endScreen     = document.getElementById('end-screen');
+const startBtn      = document.getElementById('start-game');
+const playAgainBtn  = document.getElementById('play-again');
+const gameGrid      = document.querySelector('.game-grid');
 const currentCansEl = document.getElementById('current-cans');
 const timerEl       = document.getElementById('timer');
 const finalScoreEl  = document.getElementById('final-score');
@@ -33,6 +33,11 @@ difficultyButtons.forEach(btn => {
     difficultyButtons.forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
     currentDifficulty = btn.dataset.difficulty;
+
+    // If game is running, apply new spawn speed immediately
+    if (gameActive) {
+      resetSpawnLoop();
+    }
   });
 });
 
@@ -46,44 +51,48 @@ function createGrid() {
   }
 }
 
-// Spawn logic
-function spawnItems() {
+// Spawn exactly one item per tick into a random empty cell
+function spawnItemOnce() {
   const settings = difficultySettings[currentDifficulty];
   const cells = Array.from(document.querySelectorAll('.grid-cell'));
+  const empty = cells.filter(c => !c.firstChild);
+  if (empty.length === 0) return;
 
-  // Try spawning into empty cells each tick
-  cells.forEach(cell => {
-    if (cell.firstChild) return;
-    if (Math.random() < 0.4) {
-      const isBomb = Math.random() < 0.25; // 25% bomb
-      const wrapper = document.createElement('div');
-      wrapper.className = isBomb ? 'bomb-wrapper' : 'water-can-wrapper';
+  const cell = empty[Math.floor(Math.random() * empty.length)];
+  const isBomb = Math.random() < 0.25; // 25% chance of bomb
 
-      const item = document.createElement('div');
-      item.className = isBomb ? 'bomb' : 'water-can';
+  const wrapper = document.createElement('div');
+  wrapper.className = isBomb ? 'bomb-wrapper' : 'water-can-wrapper';
 
-      item.addEventListener('click', () => {
-        if (!gameActive) return;
-        if (isBomb) {
-          currentCans = Math.max(0, currentCans - 5);
-          flashCell(cell, '#F5402C');
-        } else {
-          currentCans += 10;
-          flashCell(cell, '#3CCB5D');
-        }
-        updateHUD();
-        wrapper.remove();
-      });
+  const item = document.createElement('div');
+  item.className = isBomb ? 'bomb' : 'water-can';
 
-      wrapper.appendChild(item);
-      cell.appendChild(wrapper);
-
-      // Auto remove after duration
-      setTimeout(() => {
-        if (wrapper.parentNode) wrapper.remove();
-      }, settings.itemDuration);
+  item.addEventListener('click', () => {
+    if (!gameActive) return;
+    if (isBomb) {
+      currentCans = Math.max(0, currentCans - 1); // -1 per bomb
+      flashCell(cell, '#F5402C');
+    } else {
+      currentCans += 1; // +1 per can
+      flashCell(cell, '#3CCB5D');
     }
+    updateHUD();
+    wrapper.remove();
   });
+
+  wrapper.appendChild(item);
+  cell.appendChild(wrapper);
+
+  // Auto-remove after item duration
+  setTimeout(() => {
+    if (wrapper.parentNode) wrapper.remove();
+  }, settings.itemDuration);
+}
+
+function resetSpawnLoop() {
+  if (spawnIntervalId) clearInterval(spawnIntervalId);
+  const settings = difficultySettings[currentDifficulty];
+  spawnIntervalId = setInterval(spawnItemOnce, settings.spawnInterval);
 }
 
 // UI helpers
@@ -123,11 +132,9 @@ function startGame() {
   showScreen('game-screen');
   createGrid();
 
-  const settings = difficultySettings[currentDifficulty];
-
-  // Start loops
-  spawnItems();
-  spawnIntervalId = setInterval(spawnItems, settings.spawnInterval);
+  // Start spawning and timer
+  spawnItemOnce(); // immediate spawn
+  resetSpawnLoop();
 
   timerIntervalId = setInterval(() => {
     timeLeft--;
@@ -143,12 +150,11 @@ function endGame() {
 
   finalScoreEl.textContent = currentCans;
   endMessageEl.textContent =
-    currentCans >= 100 ? "🎉 Amazing! You're a Water Champion!" :
-    currentCans >= 50  ? "👏 Great job! Keep it up!" :
-                         "💧 Good try! Play again?";
+    currentCans >= GOAL_CANS ? '🎉 Amazing! You hit the goal!' :
+    currentCans >= Math.ceil(GOAL_CANS * 0.5) ? '👏 Great job! Keep it up!' :
+    '💧 Good try! Play again?';
 
   showScreen('end-screen');
-  if (currentCans >= 100) showConfetti();
 }
 
 function clearIntervals() {
