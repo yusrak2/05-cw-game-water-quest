@@ -167,20 +167,20 @@ button:hover, .donate-btn:hover {
 
 .game-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr); /* 3 columns */
-  grid-template-rows: repeat(3, 1fr); /* 3 rows */
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 1fr);
   gap: 8px;
   justify-items: center;
   align-items: center;
   margin: 32px auto;
   max-width: 800px;
-  background-color: rgba(255, 255, 255, 0.9);
+  background-color: transparent;
   padding: 15px;
   border-radius: 12px;
 }
 
 .grid-cell {
-  background-color: #e8e8e8;
+  background-color: transparent; /* Changed from #e8e8e8 */
   border-radius: 8px;
   aspect-ratio: 1;
   display: flex;
@@ -190,7 +190,10 @@ button:hover, .donate-btn:hover {
   transition: background-color 0.3s;
   position: relative;
   overflow: hidden;
+  width: 100%;
+  height: 100%;
 }
+
 
 .water-can-wrapper {
   position: static;
@@ -351,18 +354,4 @@ button {
 .water-can:active,
 .bomb:active {
   background: transparent !important;
-}
-
-.game-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr); /* 3 columns */
-  grid-template-rows: repeat(3, 1fr); /* 3 rows */
-  gap: 8px;
-  justify-items: center;
-  align-items: center;
-  margin: 32px auto;
-  max-width: 800px;
-  background-color: transparent; /* Changed from rgba(255, 255, 255, 0.9) */
-  padding: 15px;
-  border-radius: 12px;
 }
