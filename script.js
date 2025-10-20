@@ -146,3 +146,42 @@ function showScreen(screenId) {
     }
   });
 }
+
+// Difficulty settings
+let currentDifficulty = 'medium';
+const difficultySettings = {
+  easy: {
+    spawnInterval: 1500,  // milliseconds between spawns
+    itemDuration: 2500    // how long items stay visible
+  },
+  medium: {
+    spawnInterval: 1000,
+    itemDuration: 2000
+  },
+  hard: {
+    spawnInterval: 600,
+    itemDuration: 1500
+  }
+};
+
+// Handle difficulty selection
+const difficultyButtons = document.querySelectorAll('.difficulty-btn');
+difficultyButtons.forEach(btn => {
+  btn.addEventListener('click', () => {
+    difficultyButtons.forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    currentDifficulty = btn.dataset.difficulty;
+  });
+});
+
+// Update your game initialization to use difficulty settings
+function startGame() {
+  // ...existing code...
+  
+  const settings = difficultySettings[currentDifficulty];
+  
+  // Use settings.spawnInterval for your spawn timer
+  spawnInterval = setInterval(spawnItem, settings.spawnInterval);
+  
+  // Use settings.itemDuration for how long items stay on screen
+}
